@@ -1,0 +1,63 @@
+@use "./variables" as *;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
+ul {
+    list-style-type: none;
+}
+
+a{
+    text-decoration: none;
+    color: #0f0f0f;
+}
+
+@keyframes fadeInRight {
+    0% {
+        left: 0px;
+        top: -25px;
+    }
+    100% {
+        left: 0px;
+        top: 25px;
+    }
+}
+
+body {
+    line-height: 1;
+    font-weight: 400;
+    background-color: white;
+    font-weight: 400;
+    background-color: white;
+    font-family: $font-family;
+}
+button {
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+.wrapper {
+    // max-width: 1840px;
+    margin: 0 auto;
+}
+.container {
+     max-width: 1200px;
+    margin: 0 auto;
+    // padding: 0 15px;
+    font-family: $font-family;
+    height: 100%;
+}
+
+
+@mixin mobile {
+    @media only screen and (max-width: $mobile-width) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media only screen and (max-width: $tablet-width) {
+        @content;
+    }
+}
+a:hover {
+    color: black;
+}
