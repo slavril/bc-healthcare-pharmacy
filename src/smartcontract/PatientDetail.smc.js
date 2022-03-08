@@ -24,14 +24,45 @@ class PatientDetail extends BaseSmartContract {
 
         console.log('Param: ', param);
 
+        const result = this.getDetail(param.patientId, param.password)
+
+        if (result) {
+            const transaction = TransactionModel.init(param.socketId, {
+                smcKey: 'PatientDetailSmartContract',
+                patient: result.toJsonAndPrescription
+            })
+
+            socketService.sendSMCReturn(transaction.toJson())
+        }
+    }
+
+    /**
+     * @type {PrescriptionModel[]} allPrescription
+     */
+    get allPrescription() {
+        return chainService.chains.filter(e => e.type == 'prescription').map(e => {
+            return PrescriptionModel.initFromJson(e.transaction)
+        })
+    }
+
+    getAllPrescriptions = (patientId) => {
+        chainService.chains.filter(e => e.type == 'prescription').find(e => e.transaction.patientId == patientId )
+    }
+
+    /**
+     * 
+     * @param {*} ID 
+     * @param {*} password 
+     * @returns {PatientModel}
+     */
+    getDetail = (ID, password) => {
         const result = chainService.chains.filter(e => {
             return (e.type === 'patient')
         }).find(e => {
             const patient = PatientModel.initFromJson(e.transaction)
-
-            if (patient.ID === param.patientId) {
-                if (param.password) {
-                    if (patient.isVerified(param.password)) {
+            if (patient.ID == ID) {
+                if (password) {
+                    if (patient.isVerified(password)) {
                         return true
                     }
                 }
@@ -50,26 +81,10 @@ class PatientDetail extends BaseSmartContract {
                 patient.prescriptions = this.allPrescription.filter(e => e.patientID == patient.ID)
             }
 
-            const transaction = TransactionModel.init(param.socketId, {
-                smcKey: 'PatientDetailSmartContract',
-                patient: patient.toJsonAndPrescription
-            })
-
-            socketService.sendSMCReturn(transaction.toJson())
+            return patient
         }
-    }
 
-    /**
-     * @type {PrescriptionModel[]} allPrescription
-     */
-    get allPrescription() {
-        return chainService.chains.filter(e => e.type == 'prescription').map(e => {
-            return PrescriptionModel.initFromJson(e.transaction)
-        })
-    }
-
-    getAllPrescriptions = (patientId) => {
-        chainService.chains.filter(e => e.type == 'prescription').find(e => e.transaction.patientId == patientId )
+        return undefined
     }
 
 }

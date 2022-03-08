@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './addPatient.scss';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import Select from 'react-select'
 
 import { socketService } from '../../services/Socket.service'
@@ -9,9 +9,13 @@ import { TimeUtil } from '../../utils/Time.util'
 import { getAllDoctorSmartContract } from '../../smartcontract/GetAllDoctors.smc'
 import { chainService } from '../../services/Blockchain.service'
 import { patientService } from '../../services/Patient.service'
+import { patientDetailSmartContract } from '../../smartcontract/PatientDetail.smc'
 
-function AddPatient() {
+function AddPatient({ route, navigation }) {
     const navigate = useNavigate();
+    let [searchParams, setSearchParams] = useSearchParams();
+    const selectInputRef = useRef();
+
     const option = [
         { value: 'Male', label: 'Male' },
         { value: 'Female', label: 'Female' },
@@ -19,11 +23,12 @@ function AddPatient() {
 
     const [status, setStatus] = useState('ACTIVE');
     const [name, setName] = useState('');
-    const [gender, setGender] = useState('');
+    const [gender, setGender] = useState(null);
     const [date, setDate] = useState('');
     const [address, setAddress] = useState('');
     const [assignDoctor, setDoctor] = useState('');
     const [password, setPassword] = useState('');
+
 
     const addNewPatient = (e) => {
         if (name !== '' && gender !== '' && date !== '' && address !== '') {
@@ -59,8 +64,27 @@ function AddPatient() {
         })
     }
 
+    useEffect(() => {
+        const patientID = searchParams.get('id')
+        if (patientID) {
+            let patient = patientDetailSmartContract.getDetail(patientID)
+
+            if (patient) {
+                setName(patient.name)
+                setGender(patient.gender)
+                setAddress(patient.address)
+                setDate(patient.DOB)
+            }
+        }
+    })
+
+    const buttonTitle = () => {
+        if (searchParams.get('id')) return 'Edit patient'
+        return 'Add patient'
+    }
+
     return (
-        <div className="add-patient">
+        <div className="add-patient" >
             <div className="add-patient-container">
                 <h2 className="add-patient-container-title">
                     Add new patient
@@ -84,28 +108,50 @@ function AddPatient() {
                         </div>
                         <div className="panel-right">
                             <p className='title'>Patient full name</p>
-                            <input type="text" onChange={(e) => { setName(e.target.value) }} placeholder='Name' className="panel-right-input panel-right-name " />
-                            
+                            <input
+                                type="text"
+                                onChange={(e) => { setName(e.target.value) }}
+                                placeholder='Name' className="panel-right-input panel-right-name "
+                                value={name}
+                            />
+
                             <p className='title'>Patient gender</p>
-                            <Select options={option} onChange={(e) => { setGender(e.value) }} className="panel-right-gender" placeholder='Gender' />
-                            
+                            <Select
+                                options={option}
+                                onChange={(e) => { setGender(e.value) }}
+                                className="panel-right-gender"
+                                placeholder='Gender'
+                                value={option.find(e => e.value == gender)}
+                            />
+
                             <p className='title'>Birthday</p>
-                            <input type="date" onChange={(e) => { setDate(e.target.value) }} placeholder='Date of Birth' className="panel-right-input panel-right-dob" />
-                            
+                            <input
+                                type="date"
+                                onChange={(e) => { setDate(e.target.value) }}
+                                placeholder='Date of Birth' className="panel-right-input panel-right-dob"
+                                value={date}
+                            />
+
                             <p className='title'>Patient address</p>
-                            <input type="text" onChange={(e) => { setAddress(e.target.value) }} placeholder='Address' className="panel-right-input panel-right-address" />
+                            <input
+                                type="text"
+                                onChange={(e) => { setAddress(e.target.value) }}
+                                placeholder='Address'
+                                className="panel-right-input panel-right-address"
+                                value={address}
+                            />
 
                             <p className='title'>Please assign doctor</p>
                             <Select options={doctors()} onChange={(e) => { setDoctor(e.value) }} className="panel-right-gender" placeholder='Assign doctor' />
-                            
+
                             <p className='title'>Account password</p>
                             <input type="text" onChange={(e) => { setPassword(e.target.value) }} placeholder='Password' className="panel-right-input panel-right-address" />
-                            
+
                             <div className="button-bar">
                                 <button className="btn-back btn" onClick={() => {
                                     navigate('/home')
                                 }}>Back</button>
-                                <button className="btn-add btn" onClick={addNewPatient}>Add patient</button>
+                                <button className="btn-add btn" onClick={addNewPatient}>{buttonTitle()}</button>
                             </div>
                         </div>
                     </div>

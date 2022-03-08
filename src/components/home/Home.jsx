@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './Home.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, Route } from 'react-router-dom';
 
 import { getAllDoctorSmartContract } from '../../smartcontract/GetAllDoctors.smc'
 import { allPatientSmartContract } from '../../smartcontract/AllPatient.smc'
 import { chainService } from '../../services/Blockchain.service'
 import DoctorModel from '../../models/Doctor.model'
 import { patientService } from '../../services/Patient.service'
-import { socketService} from '../../services/Socket.service'
+import { socketService } from '../../services/Socket.service'
 
 function Home() {
     const navigate = useNavigate();
@@ -35,18 +35,22 @@ function Home() {
     }, [])
 
     const toDetail = async (e) => {
-         //await sharingData(e)
-         //navigate('/patientdetail')
+        //await sharingData(e)
+        //navigate('/patientdetail')
     }
 
     const addNewDoctor = () => {
-        navigate('/addDoctor')
+        navigate('/add-doctor')
     }
 
     const addNewPatient = () => {
-        navigate('/addPatient')
+        navigate('/add-patient')
     }
 
+    const onPatientClick = (ID) => {
+        //console.log(ID);
+        //navigate('/edit-patient', { patientID: ID })
+    }
 
     return (
         <div className="content">
@@ -70,7 +74,7 @@ function Home() {
                     }) : 'no data'}
                 </div>
             </div>
-            
+
             <div>
                 <div className='header'>
                     <h2>Patients</h2>
@@ -83,13 +87,13 @@ function Home() {
                 <div className='list-patient'>
                     {patients ? patients.map(e => {
                         return (
-                            <div className='patient-cell' key={e.ID}>
+                            <Link to={'../edit-patient?id=' + e.ID} className='patient-cell' key={e.ID} onClick={() => { onPatientClick(e.ID) }}>
                                 <div className='text-title'>{e.name}</div>
                                 <div className='text-gender'>ID {e.ID}</div>
                                 <div className='text'>{e.gender}</div>
                                 <div className='text'>{e.DOB}</div>
                                 <div className='text'>{e.address}</div>
-                            </div>
+                            </Link>
                         )
                     }) : 'no data'}
                 </div>

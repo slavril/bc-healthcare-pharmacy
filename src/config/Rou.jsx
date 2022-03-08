@@ -10,9 +10,10 @@ function Rou() {
         <StoreProvider>
             <Routes>
                 <Route exact path="/" element={<Home />} />
-                <Route exact path="/Home" element={<Home />} />
-                <Route exact path="/AddPatient" element={<AddPatient />} />
-                <Route exact path="/AddDoctor" element={<AddDoctor />} />
+                <Route exact path="/home" element={<Home />} />
+                <Route exact path="/add-patient" element={<AddPatient />} />
+                <Route exact path="/edit-patient" element={<AddPatient />} />
+                <Route exact path="/add-doctor" element={<AddDoctor />} />
             </Routes>
         </StoreProvider>
     )
