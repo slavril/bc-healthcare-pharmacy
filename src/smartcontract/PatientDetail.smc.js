@@ -57,9 +57,13 @@ class PatientDetail extends BaseSmartContract {
      * @returns {PatientModel}
      */
     getDetail = (ID, password) => {
-        const result = this.getDetailBlock(ID, password)
+        let result = this.getDetailBlock(ID, password)
 
         if (result) {
+            if (result.direction) {
+                result = chainService.getShadowOf(result.direction)
+            }
+            
             let patient = PatientModel.initFromJson(result.transaction)
 
             if (this.allPrescription) {

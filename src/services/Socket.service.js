@@ -196,6 +196,16 @@ export class SocketService {
             
         })
 
+        this.socketIo.on('smc_return', transaction => {
+            if (transaction.data.smcKey === 'EditPatientSmartContract') {
+                console.log('New node added', transaction.data.block.block);
+                chainService.addBlockToChain(BlockModel.initFromJson(transaction.data.block.block))
+                chainService.updateBlockDirection(transaction.data.block.direction, transaction.data.block.block.index)
+                if (chainService.onChainSynced) {
+                    chainService.onChainSynced()
+                }
+            }            
+        })
     }
 
 }

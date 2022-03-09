@@ -23,11 +23,11 @@ class EditPatient extends BaseSmartContract {
         if (block !== false) {
             const transaction = TransactionModel.init(null, {
                 smcKey: 'EditPatientSmartContract',
-                patient: param.patient
+                patient: param.patient,
+                block: block
             })
 
             socketService.sendSMCReturn(transaction.toJson())
-            socketService.sendData(TransactionModel.init(null, block), 'newNodeAdded-directionUpdate')
         }
     }
 
