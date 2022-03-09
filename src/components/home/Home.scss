@@ -1,10 +1,18 @@
 @use "../../scss/" as *;
 
 .content {
+    .title {
+        display: inline;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
     padding: 16px;
     .header {
         padding: 8px;
         margin-top: 32px;
+        display: flex;
+        align-items: center;
     }
 
     .textInput {

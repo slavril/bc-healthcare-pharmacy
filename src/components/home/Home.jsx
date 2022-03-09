@@ -52,12 +52,8 @@ function Home() {
         <div className="content">
             <div className='doctor'>
                 <div className='header'>
-                    <h2>Doctors list</h2>
-                </div>
-                <div className='panel'>
-                    <div>
-                        <button className='button' onClick={addNewDoctor} style={{ marginLeft: 8 }}>New doctor</button>
-                    </div>
+                    <div className="title">Doctors</div>
+                    <button className='button' onClick={addNewDoctor} style={{ marginLeft: 8 }}>New doctor</button>
                 </div>
                 <div className='list'>
                     {doctors ? doctors.map(e => {
@@ -73,12 +69,8 @@ function Home() {
 
             <div>
                 <div className='header'>
-                    <h2>Patients</h2>
-                </div>
-                <div className='panel'>
-                    <div>
-                        <button className='button' onClick={addNewPatient} style={{ marginLeft: 8 }}>New patient</button>
-                    </div>
+                <div className="title">Patients</div>
+                    <button className='button' onClick={addNewPatient} style={{ marginLeft: 8 }}>New patient</button>
                 </div>
                 <div className='list-patient'>
                     {patients ? patients.map(e => {
@@ -89,6 +81,7 @@ function Home() {
                                 <div className='text'>{e.gender}</div>
                                 <div className='text'>{e.DOB}</div>
                                 <div className='text'>{e.address}</div>
+                                <div className='text'>Assigned doctor: {e.assignedDoctor}</div>
                             </Link>
                         )
                     }) : 'no data'}
