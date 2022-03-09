@@ -12,11 +12,7 @@ import { socketService } from '../../services/Socket.service'
 function Home() {
     const navigate = useNavigate();
     const [patients, setPatients] = useState([]);
-    const [blocks, setBlocks] = useState([]);
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
-
+    
     /**
      * @type {DoctorModel[]} doctors
      */

@@ -190,6 +190,10 @@ export class SocketService {
             console.log('New node added', json);
             chainService.addBlockToChain(BlockModel.initFromJson(json.data.block))
             chainService.updateBlockDirection(json.data.direction, json.data.block.index)
+            if (chainService.onChainSynced) {
+                chainService.onChainSynced()
+            }
+            
         })
 
     }

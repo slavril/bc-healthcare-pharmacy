@@ -13,9 +13,6 @@ const host = "http://localhost:3000";
 
 function App() {
   const [blocks, setBlocks] = useState([]);
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
 
   useEffect(() => {
     socketService.start()
@@ -30,18 +27,6 @@ function App() {
     };
 
   }, []);
-
-  const addNewDoctor = (e) => {
-    if (name != '' && username != '' && password != '') {
-      let doctor = new DoctorModel()
-      doctor.name = name
-      doctor.username = username
-      doctor.password = password
-
-      chainService.addBlockToChain(patientService.convertDoctorToBlock(doctor))
-      socketService.sendSyncData()
-    }
-  }
 
   return (
     <BrowserRouter>

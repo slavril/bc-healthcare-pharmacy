@@ -36,7 +36,6 @@ class AllPatientSmartContract extends BaseSmartContract {
         })
 
         const result = patients.map(e => {
-            console.log(e);
             if (e.direction) {
                 const shadowBlock = chainService.getShadowOf(e.direction)
                 if (shadowBlock) {
