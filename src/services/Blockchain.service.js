@@ -25,6 +25,9 @@ class BlockChainService {
      * @param {BlockModel} block 
      */
     addBlockToChain = (block) => {
+        if (!block) return false
+        
+        block.regenerateHash()
         if (this.isBlockValid(block)) {
             this.chains.push(block)
             return true
@@ -73,6 +76,22 @@ class BlockChainService {
     }
 
     onChainSynced = () => {}
+
+    updateBlockDirection = (index, value) => {
+        let oldIndex = this.chains.findIndex(e => e.index == index)
+        if (oldIndex >= 0) {
+            this.chains[oldIndex].direction = value
+            return true
+        }
+
+        return false
+    }
+
+    getShadowOf = (index) => {
+        return this.chains.find(e => {
+            return e.index == index
+        })
+    }
 
 }
 

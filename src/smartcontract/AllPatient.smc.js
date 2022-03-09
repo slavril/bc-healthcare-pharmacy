@@ -26,19 +26,29 @@ class AllPatientSmartContract extends BaseSmartContract {
         socketService.sendSMCReturn(transaction.toJson())
     }
 
-        /**
-     * 
-     * @returns {PatientModel[]}
-     */
-         getAllPatients = () => {
-            let patients = chainService.chains.filter(e => {
-                return (e.type === 'patient')
-            })
-    
-            const result = patients.map(e => { return PatientModel.initFromJson(e.transaction).toJson })
-    
-            return result
-        }
+    /**
+ * 
+ * @returns {PatientModel[]}
+ */
+    getAllPatients = () => {
+        let patients = chainService.chains.filter(e => {
+            return (e.type === 'patient')
+        })
+
+        const result = patients.map(e => {
+            console.log(e);
+            if (e.direction) {
+                const shadowBlock = chainService.getShadowOf(e.direction)
+                if (shadowBlock) {
+                    return PatientModel.initFromJson(shadowBlock.transaction).toJson
+                }
+            }
+
+            return PatientModel.initFromJson(e.transaction).toJson 
+        })
+
+        return result
+    }
 
 }
 

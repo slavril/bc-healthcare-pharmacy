@@ -63,7 +63,7 @@ class PatientService {
         block.transaction = doctorObject.toJson
         block.index = doctorObject.username
         block.type = TRANSACTION_TYPE.doctor
-
+        
         return block
     }
 

@@ -4,6 +4,7 @@ import TransactionModel from '../models/Transaction.model'
 import { socketService } from '../services/Socket.service'
 import PatientModel from '../models/patient.model'
 import PrescriptionModel from '../models/Prescription.model'
+import BlockModel from '../models/Block.model'
 
 class PatientDetail extends BaseSmartContract {
 
@@ -56,6 +57,28 @@ class PatientDetail extends BaseSmartContract {
      * @returns {PatientModel}
      */
     getDetail = (ID, password) => {
+        const result = this.getDetailBlock(ID, password)
+
+        if (result) {
+            let patient = PatientModel.initFromJson(result.transaction)
+
+            if (this.allPrescription) {
+                patient.prescriptions = this.allPrescription.filter(e => e.patientID == patient.ID)
+            }
+
+            return patient
+        }
+
+        return undefined
+    }
+
+    /**
+     * 
+     * @param {*} ID 
+     * @param {*} password 
+     * @returns {BlockModel}
+     */
+    getDetailBlock = (ID, password) => {
         const result = chainService.chains.filter(e => {
             return (e.type === 'patient')
         }).find(e => {
@@ -74,17 +97,7 @@ class PatientDetail extends BaseSmartContract {
             return false
         })
 
-        if (result) {
-            let patient = PatientModel.initFromJson(result.transaction)
-
-            if (this.allPrescription) {
-                patient.prescriptions = this.allPrescription.filter(e => e.patientID == patient.ID)
-            }
-
-            return patient
-        }
-
-        return undefined
+        return result
     }
 
 }

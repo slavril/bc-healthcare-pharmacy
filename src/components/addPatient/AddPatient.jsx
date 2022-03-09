@@ -10,10 +10,16 @@ import { getAllDoctorSmartContract } from '../../smartcontract/GetAllDoctors.smc
 import { chainService } from '../../services/Blockchain.service'
 import { patientService } from '../../services/Patient.service'
 import { patientDetailSmartContract } from '../../smartcontract/PatientDetail.smc'
+import { editPatientSmartContract } from '../../smartcontract/EditPatient.smc'
 
 function AddPatient({ route, navigation }) {
     const navigate = useNavigate();
     let [searchParams, setSearchParams] = useSearchParams();
+    const patientID = searchParams.get('id')
+    /**
+     * @type {PatientModel} patient
+     */
+    const patient = patientID ? patientDetailSmartContract.getDetail(patientID) : null
     const selectInputRef = useRef();
 
     const option = [
@@ -22,29 +28,57 @@ function AddPatient({ route, navigation }) {
     ]
 
     const [status, setStatus] = useState('ACTIVE');
-    const [name, setName] = useState('');
-    const [gender, setGender] = useState(null);
-    const [date, setDate] = useState('');
-    const [address, setAddress] = useState('');
+    const [name, setName] = useState(patient ? patient.name : '');
+    const [gender, setGender] = useState(patient ? patient.gender : null);
+    const [date, setDate] = useState(patient ? patient.DOB : '');
+    const [address, setAddress] = useState(patient ? patient.address : '');
     const [assignDoctor, setDoctor] = useState('');
     const [password, setPassword] = useState('');
 
+    const editPatient = () => {
+        let patient = new PatientModel()
+        patient.name = name
+        patient.ID = searchParams.get('id')
+        patient.DOB = date
+        patient.address = address
+        patient.gender = gender
+        return patient
+    }
 
-    const addNewPatient = (e) => {
+    const addNewPatient = () => {
+        let patient = new PatientModel()
+        patient.name = name
+        patient.ID = TimeUtil.currentUTCTimestamp()
+        patient.DOB = date
+        patient.address = address
+        patient.gender = gender
+
+        if (password != '') {
+            patient.password = password
+        }
+
+        return patient
+    }
+
+    const onModifyPatient = () => {
         if (name !== '' && gender !== '' && date !== '' && address !== '') {
-            let patient = new PatientModel()
-            patient.name = name
-            patient.ID = TimeUtil.currentUTCTimestamp()
-            patient.DOB = date
-            patient.address = address
-            patient.gender = gender
-
-            if (password != '') {
-                patient.password = password
+            /**
+             * @type {PatientModel} patient
+             */
+            let patient;
+            if (searchParams.get('id')) {
+                patient = editPatient()
+                editPatientSmartContract.execute(null, null, {
+                    userId: searchParams.get('id'),
+                    patient: patient.toJson
+                })
             }
-
-            chainService.addBlockToChain(patientService.convertPatientToBlock(patient))
-            socketService.sendSyncData()
+            else {
+                patient = addNewPatient()
+                if (chainService.addBlockToChain(patientService.convertPatientToBlock(patient))) {
+                    socketService.sendSyncData()
+                }
+            }
 
             navigate('/home')
         }
@@ -65,17 +99,6 @@ function AddPatient({ route, navigation }) {
     }
 
     useEffect(() => {
-        const patientID = searchParams.get('id')
-        if (patientID) {
-            let patient = patientDetailSmartContract.getDetail(patientID)
-
-            if (patient) {
-                setName(patient.name)
-                setGender(patient.gender)
-                setAddress(patient.address)
-                setDate(patient.DOB)
-            }
-        }
     })
 
     const buttonTitle = () => {
@@ -110,9 +133,9 @@ function AddPatient({ route, navigation }) {
                             <p className='title'>Patient full name</p>
                             <input
                                 type="text"
-                                onChange={(e) => { setName(e.target.value) }}
+                                onChange={e => setName(e.target.value)}
                                 placeholder='Name' className="panel-right-input panel-right-name "
-                                value={name}
+                                defaultValue={name}
                             />
 
                             <p className='title'>Patient gender</p>
@@ -121,7 +144,7 @@ function AddPatient({ route, navigation }) {
                                 onChange={(e) => { setGender(e.value) }}
                                 className="panel-right-gender"
                                 placeholder='Gender'
-                                value={option.find(e => e.value == gender)}
+                                // value={option.find(e => e.value == (patient ? patient.gender : gender))}
                             />
 
                             <p className='title'>Birthday</p>
@@ -129,7 +152,7 @@ function AddPatient({ route, navigation }) {
                                 type="date"
                                 onChange={(e) => { setDate(e.target.value) }}
                                 placeholder='Date of Birth' className="panel-right-input panel-right-dob"
-                                value={date}
+                                defaultValue={date}
                             />
 
                             <p className='title'>Patient address</p>
@@ -138,7 +161,7 @@ function AddPatient({ route, navigation }) {
                                 onChange={(e) => { setAddress(e.target.value) }}
                                 placeholder='Address'
                                 className="panel-right-input panel-right-address"
-                                value={address}
+                                defaultValue={address}
                             />
 
                             <p className='title'>Please assign doctor</p>
@@ -151,7 +174,7 @@ function AddPatient({ route, navigation }) {
                                 <button className="btn-back btn" onClick={() => {
                                     navigate('/home')
                                 }}>Back</button>
-                                <button className="btn-add btn" onClick={addNewPatient}>{buttonTitle()}</button>
+                                <button className="btn-add btn" onClick={onModifyPatient}>{buttonTitle()}</button>
                             </div>
                         </div>
                     </div>

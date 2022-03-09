@@ -17,7 +17,11 @@ export default class Block {
     hash = null
     type = null
 
+    direction = null
+
     get computeHash() {
+        if (this.hash) return this.hash
+        
         const json = {
             index: this.index,
             transaction: this.transaction,
@@ -25,13 +29,17 @@ export default class Block {
             type: this.type
         }
 
-        if (this.hash) return this.hash
         this.hash = StringUtil.hash(JSON.stringify(json));
         return this.hash
     }
 
     constructor() {
         this.timestamp = TimeUtil.currentUTCTimestamp()
+        this.index = TimeUtil.currentUTCTimestamp()
+    }
+
+    regenerateHash = () => {
+        this.hash = null
         this.hash = this.computeHash
     }
 
@@ -67,6 +75,7 @@ export default class Block {
         block.genericBlock = json.genericBlock
         block.type = json.type
         block.hash = json.hash
+        block.direction = json.direction
 
         if (!json.genericBlock) {
             block.previousHash = json.previousHash
@@ -85,13 +94,14 @@ export default class Block {
             previousHash: this.previousHash,
             genericBlock: this.genericBlock,
             hash: this.computeHash,
-            type: this.type
+            type: this.type,
+            direction: this.direction
         }
     }
 
     get base64Transaction() {
         return JSON.stringify(this.transaction)
-        return btoa(JSON.stringify(this.transaction))
+        //return btoa(JSON.stringify(this.transaction))
     }
 
 }

@@ -24,7 +24,8 @@ const socket_observe_key = {
     newDoctorAdded: 'newDoctorAdded',
 
     patientList: 'patientList',
-    newNodeAdded: 'newNodeAdded'
+    newNodeAdded: 'newNodeAdded',
+    updateNode: 'newNodeAdded-directionUpdate'
 }
 
 export class SocketService {
@@ -47,6 +48,7 @@ export class SocketService {
     }
 
     sendSMCReturn = (data) => {
+        console.log('Send smc data', data);
         this.socketIo.emit('smc_return', data);
     }
 
@@ -182,6 +184,12 @@ export class SocketService {
         this.socketIo.on(socket_observe_key.newNodeAdded, json => {
             console.log('New node added', json);
             chainService.addBlockToChain(BlockModel.initFromJson(json.data))
+        })
+
+        this.socketIo.on(socket_observe_key.updateNode, json => {
+            console.log('New node added', json);
+            chainService.addBlockToChain(BlockModel.initFromJson(json.data.block))
+            chainService.updateBlockDirection(json.data.direction, json.data.block.index)
         })
 
     }

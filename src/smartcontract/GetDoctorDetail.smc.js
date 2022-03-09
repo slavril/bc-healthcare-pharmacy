@@ -34,23 +34,16 @@ class DoctorDetail extends BaseSmartContract {
         if (!param || !param.doctorUsername) { return }
         if (!param || !param.doctorPassword) { return }
 
-        let block = null
-        if (param.doctorUsername) {
-            block = chainService.chains.find(e => e.index === param.doctorUsername)
-        }
+        const doctor = this.getDetail(param.doctorUsername, param.doctorPassword)
+        if (doctor) {
+            const transaction = TransactionModel.init(param.socketId, {
+                smcKey: 'GetDoctorDetailSmartContract',
+                doctor: doctor.toJson
+            })
 
-        if (block) {
-            const doctor = this.verifyDoctor(block, param.doctorUsername, param.doctorPassword)
-            if (doctor !== false) {
-                const transaction = TransactionModel.init(param.socketId, {
-                    smcKey: 'GetDoctorDetailSmartContract',
-                    doctor: doctor
-                })
+            socketService.sendSMCReturn(transaction.toJson())
 
-                socketService.sendSMCReturn(transaction.toJson())
-
-                return;
-            }
+            return;
         }
 
         // else
@@ -60,6 +53,27 @@ class DoctorDetail extends BaseSmartContract {
         })
 
         socketService.sendSMCReturn(transaction.toJson())
+    }
+
+    /**
+     * 
+     * @param {*} ID 
+     * @param {*} password 
+     * @returns {doctorModel}
+     */
+    getDetail = (ID, password) => {
+        const block = chainService.chains.find(e => e.index === ID)
+
+        if (block) {
+            const doctor = this.verifyDoctor(block, ID, password)
+
+            if (doctor !== false) {
+                const object = doctorModel.initFromJson(block.transaction)
+                return object
+            }
+        }
+
+        return undefined
     }
 
 }

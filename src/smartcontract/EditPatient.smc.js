@@ -5,6 +5,8 @@ import { socketService } from '../services/Socket.service'
 import PatientModel from '../models/patient.model'
 import BlockModel from '../models/Block.model'
 
+import { patientDetailSmartContract } from './PatientDetail.smc'
+
 class EditPatient extends BaseSmartContract {
 
     constructor() {
@@ -14,24 +16,46 @@ class EditPatient extends BaseSmartContract {
     }
 
     execute = (creatorKey, contractKey, param) => {
+        if (!param || !param.userId) { return }
         if (!param || !param.patient) { return }
 
-        let block = new BlockModel()
-        block.previousHash = chainService.lastBlock.computeHash
-        block.transaction = param.patient
-        block.index = param.patient.ID
-        block.type = 'patient'
-
-        if (chainService.addBlockToChain(block)) {
-            console.log('Added chain success, new chain', chainService.chains);
+        const block = this.editValue(param.userId, PatientModel.initFromJson(param.patient))
+        if (block !== false) {
             const transaction = TransactionModel.init(null, {
                 smcKey: 'EditPatientSmartContract',
-                patient: PatientModel.initFromJson(param)
+                patient: param.patient
             })
 
             socketService.sendSMCReturn(transaction.toJson())
-            socketService.sendData(TransactionModel.init(null, block.toJson), 'newNodeAdded')
+            socketService.sendData(TransactionModel.init(null, block), 'newNodeAdded-directionUpdate')
         }
+    }
+
+    /**
+     * 
+     * @param {*} ID 
+     * @param {PatientModel} newData
+     */
+    editValue = (ID, newData) => {
+        let oldBlock = patientDetailSmartContract.getDetailBlock(ID, null)
+        if (oldBlock) {
+            let block = new BlockModel()
+            block.previousHash = chainService.lastBlock.computeHash
+            block.transaction = newData.toJson
+            block.type = 'edited-patient'
+
+            if (chainService.addBlockToChain(block)) {
+                console.log('Added chain success, new chain', chainService.chains);
+                chainService.updateBlockDirection(oldBlock.index, block.index)
+
+                return {
+                    block: block.toJson,
+                    direction: oldBlock.index
+                }
+            }
+        }
+
+        return false
     }
 
 }
