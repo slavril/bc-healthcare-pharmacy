@@ -11,6 +11,8 @@ export default class Patient {
     isDeleted = false
     password = null
 
+    assignedDoctor = null
+
     /**
      * @type {PrescriptionModel[]}
      */
@@ -31,7 +33,8 @@ export default class Patient {
             DOB: this.DOB,
             address: this.address,
             gender: this.gender,
-            isDeleted: this.isDeleted
+            isDeleted: this.isDeleted,
+            assignedDoctor: this.assignedDoctor
         }
 
         if (this.password) json.password = encrypt(this.password, this.password)
@@ -58,6 +61,7 @@ export default class Patient {
         patient.gender = json.gender
         patient.isDeleted = json.isDeleted
         patient.password = json.password
+        patient.assignedDoctor = json.assignedDoctor
         return patient
     }
 

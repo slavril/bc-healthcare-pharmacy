@@ -45,7 +45,7 @@ class EditPatient extends BaseSmartContract {
             block.type = 'edited-patient'
 
             if (chainService.addBlockToChain(block)) {
-                console.log('Added chain success, new chain', chainService.chains);
+                console.log('Added chain success');
                 chainService.updateBlockDirection(oldBlock.index, block.index)
 
                 return {

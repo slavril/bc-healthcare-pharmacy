@@ -20,7 +20,6 @@ function AddPatient({ route, navigation }) {
      * @type {PatientModel} patient
      */
     const patient = patientID ? patientDetailSmartContract.getDetail(patientID) : null
-    const selectInputRef = useRef();
 
     const option = [
         { value: 'Male', label: 'Male' },
@@ -29,35 +28,60 @@ function AddPatient({ route, navigation }) {
 
     const [status, setStatus] = useState('ACTIVE');
     const [name, setName] = useState(patient ? patient.name : '');
-    const [gender, setGender] = useState(patient ? patient.gender : null);
+    const [gender, setGender] = useState(patient ? patient.gender : 'Male');
     const [date, setDate] = useState(patient ? patient.DOB : '');
     const [address, setAddress] = useState(patient ? patient.address : '');
-    const [assignDoctor, setDoctor] = useState('');
+    const [assignDoctor, setDoctor] = useState(patient ? patient.assignedDoctor : 'select-doctor');
     const [password, setPassword] = useState('');
 
     const editPatient = () => {
-        let patient = new PatientModel()
-        patient.name = name
-        patient.ID = searchParams.get('id')
-        patient.DOB = date
-        patient.address = address
-        patient.gender = gender
-        return patient
+        let newPatient = new PatientModel()
+        newPatient.name = name
+        newPatient.ID = searchParams.get('id')
+        newPatient.DOB = date
+        newPatient.address = address
+        newPatient.gender = gender
+
+        if (assignDoctor != 'select-doctor') {
+            newPatient.assignedDoctor = assignDoctor
+        }
+
+        if (password != '') {
+            newPatient.password = password
+        }
+
+        return newPatient
     }
 
     const addNewPatient = () => {
-        let patient = new PatientModel()
-        patient.name = name
-        patient.ID = TimeUtil.currentUTCTimestamp()
-        patient.DOB = date
-        patient.address = address
-        patient.gender = gender
+        let newPatient = new PatientModel()
+        newPatient.name = name
+        newPatient.ID = TimeUtil.currentUTCTimestamp()
+        newPatient.DOB = date
+        newPatient.address = address
+        newPatient.gender = gender
 
         if (password != '') {
-            patient.password = password
+            newPatient.password = password
         }
 
-        return patient
+        if (assignDoctor != 'select-doctor') {
+            newPatient.assignedDoctor = assignDoctor
+        }
+
+        return newPatient
+    }
+
+    const patientIsNotChange = () => {
+        if (patient) {
+            return (patient.name == name &&
+                patient.gender == gender &&
+                patient.address == address &&
+                patient.assignedDoctor == assignDoctor&&
+                patient.DOB == date && password.trim() == '')
+        }
+
+        return false
     }
 
     const onModifyPatient = () => {
@@ -65,17 +89,19 @@ function AddPatient({ route, navigation }) {
             /**
              * @type {PatientModel} patient
              */
-            let patient;
+            let newPatient;
             if (searchParams.get('id')) {
-                patient = editPatient()
-                editPatientSmartContract.execute(null, null, {
-                    userId: searchParams.get('id'),
-                    patient: patient.toJson
-                })
+                if (patientIsNotChange() == false) {
+                    newPatient = editPatient()
+                    editPatientSmartContract.execute(null, null, {
+                        userId: searchParams.get('id'),
+                        patient: newPatient.toJson
+                    })
+                }
             }
             else {
-                patient = addNewPatient()
-                if (chainService.addBlockToChain(patientService.convertPatientToBlock(patient))) {
+                newPatient = addNewPatient()
+                if (chainService.addBlockToChain(patientService.convertPatientToBlock(newPatient))) {
                     socketService.sendSyncData()
                 }
             }
@@ -93,9 +119,7 @@ function AddPatient({ route, navigation }) {
     }
 
     const doctors = () => {
-        return getAllDoctorSmartContract.getAllDoctor().map(e => {
-            return { value: e.username, label: e.name }
-        })
+        return getAllDoctorSmartContract.getAllDoctor()
     }
 
     useEffect(() => {
@@ -139,13 +163,15 @@ function AddPatient({ route, navigation }) {
                             />
 
                             <p className='title'>Patient gender</p>
-                            <Select
-                                options={option}
-                                onChange={(e) => { setGender(e.value) }}
-                                className="panel-right-gender"
-                                placeholder='Gender'
-                                // value={option.find(e => e.value == (patient ? patient.gender : gender))}
-                            />
+
+                            <select
+                                defaultValue={gender}
+                                onChange={e => setGender(e.target.value)}
+                                className="panel-right-input"
+                            >
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
 
                             <p className='title'>Birthday</p>
                             <input
@@ -165,7 +191,21 @@ function AddPatient({ route, navigation }) {
                             />
 
                             <p className='title'>Please assign doctor</p>
-                            <Select options={doctors()} onChange={(e) => { setDoctor(e.value) }} className="panel-right-gender" placeholder='Assign doctor' />
+
+                            <select
+                                defaultValue={assignDoctor}
+                                onChange={e => setDoctor(e.target.value)}
+                                className="panel-right-input"
+                            >
+                                <option value={'select-doctor'} key={'none'}>{'Select doctor'}</option>
+                                {
+                                    getAllDoctorSmartContract.getAllDoctor() ? getAllDoctorSmartContract.getAllDoctor().map(e => {
+                                        return (
+                                            <option value={e.username} key={e.username}>{e.name}</option>
+                                        )
+                                    }) : null
+                                }
+                            </select>
 
                             <p className='title'>Account password</p>
                             <input type="text" onChange={(e) => { setPassword(e.target.value) }} placeholder='Password' className="panel-right-input panel-right-address" />

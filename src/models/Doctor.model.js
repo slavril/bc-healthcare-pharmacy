@@ -29,6 +29,7 @@ export default class Doctor {
         doctor.username = json.username
         doctor.name = json.name
         doctor.password = json.password
+        doctor.ID = json.ID
         return doctor
     }
 
