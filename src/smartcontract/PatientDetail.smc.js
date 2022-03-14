@@ -19,7 +19,7 @@ class PatientDetail extends BaseSmartContract {
         if (!param || !param.patientId) { return }
 
         let comparePassword = false
-        if (!param || param.password) { 
+        if (!param || param.password) {
             comparePassword = true
         }
 
@@ -47,7 +47,7 @@ class PatientDetail extends BaseSmartContract {
     }
 
     getAllPrescriptions = (patientId) => {
-        chainService.chains.filter(e => e.type == 'prescription').find(e => e.transaction.patientId == patientId )
+        chainService.chains.filter(e => e.type == 'prescription').find(e => e.transaction.patientId == patientId)
     }
 
     /**
@@ -63,8 +63,12 @@ class PatientDetail extends BaseSmartContract {
             if (result.direction) {
                 result = chainService.getShadowOf(result.direction)
             }
-            
+
             let patient = PatientModel.initFromJson(result.transaction)
+
+            if (password && !patient.isVerified(password)) {
+                return undefined
+            }
 
             if (this.allPrescription) {
                 patient.prescriptions = this.allPrescription.filter(e => e.patientID == patient.ID)
@@ -88,16 +92,9 @@ class PatientDetail extends BaseSmartContract {
         }).find(e => {
             const patient = PatientModel.initFromJson(e.transaction)
             if (patient.ID == ID) {
-                if (password) {
-                    if (patient.isVerified(password)) {
-                        return true
-                    }
-                }
-                else {
-                    return true
-                }
+                return true
             }
-            
+
             return false
         })
 
@@ -106,4 +103,4 @@ class PatientDetail extends BaseSmartContract {
 
 }
 
-export let patientDetailSmartContract= Object.seal(new PatientDetail())
+export let patientDetailSmartContract = Object.seal(new PatientDetail())

@@ -3,8 +3,6 @@ import BlockModel, { TRANSACTION_TYPE } from '../models/Block.model.js'
 import PatientModel from '../models/patient.model.js'
 import DoctorModel from '../models/Doctor.model.js'
 
-import { encrypt, decrypt } from '../utils/Encryptor'
-
 class PatientService {
 
     /**

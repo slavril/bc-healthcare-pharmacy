@@ -9,6 +9,8 @@ export default class Patient {
     address = null;
     gender = null;
     isDeleted = false
+
+    // encrypted value
     password = null
 
     assignedDoctor = null
@@ -23,7 +25,7 @@ export default class Patient {
     }
 
     constructor() {
-        this.password = TimeUtil.currentUTCTimestamp().toString()
+        this.setPassword(TimeUtil.currentUTCTimestamp().toString())
     }
 
     get toJson() {
@@ -37,7 +39,7 @@ export default class Patient {
             assignedDoctor: this.assignedDoctor
         }
 
-        if (this.password) json.password = encrypt(this.password, this.password)
+        if (this.password) json.password = this.password
 
         return json
     }
@@ -68,6 +70,11 @@ export default class Patient {
     isVerified = (password) => {
         if (!password || !this.password) return false
         return (decrypt(password, this.password) == password)
+    }
+
+    setPassword = (newValue) => {
+        if (newValue)
+            this.password = encrypt(newValue, newValue)
     }
 
 }

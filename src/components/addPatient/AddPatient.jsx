@@ -47,7 +47,10 @@ function AddPatient({ route, navigation }) {
         }
 
         if (password != '') {
-            newPatient.password = password
+            newPatient.setPassword(password)
+        }
+        else {
+            newPatient = patient.password
         }
 
         return newPatient
@@ -62,7 +65,7 @@ function AddPatient({ route, navigation }) {
         newPatient.gender = gender
 
         if (password != '') {
-            newPatient.password = password
+            newPatient.setPassword(password)
         }
 
         if (assignDoctor != 'select-doctor') {
@@ -73,6 +76,7 @@ function AddPatient({ route, navigation }) {
     }
 
     const patientIsNotChange = () => {
+        if (password != '') return false
         if (patient) {
             return (patient.name == name &&
                 patient.gender == gender &&
@@ -118,10 +122,6 @@ function AddPatient({ route, navigation }) {
         else (setStatus('ACTIVE'))
     }
 
-    const doctors = () => {
-        return getAllDoctorSmartContract.getAllDoctor()
-    }
-
     useEffect(() => {
     })
 
@@ -142,6 +142,7 @@ function AddPatient({ route, navigation }) {
                             <div className="panel-left-avatar">
                                 <img src="" className="img" />
                             </div>
+                            <p className='panel-name'>{name}</p>
                             <button className='btn-upload'>Upload image</button>
                             {/* <div className="panel-left-status">
                                 <span className="panel-left-status-title">Status: </span>
