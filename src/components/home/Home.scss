@@ -1,32 +1,37 @@
 @use "../../scss/" as *;
 
 .top {
-    background-color: #f0f0f0;
+    background-color: #1B1A17;
     width: 100%;
-    padding: 16px;
+    padding: 32px;
+    border-bottom: 3px solid #F0A500;
 
     .button {
-        height: 30px;
         border-radius: 4px;
-        //border: 1px solid #f0f0f0;
-        background-color: #00A19D;
-        font-size: 14px;
-        padding: 4px 8px 4px 8px;
-        color: white;
+        background-color: #F0A500;
+        font-size: medium;
+        padding: 16px 16px 16px 16px;
+        color: #1B1A17;
+        margin-top: 16px;
+        margin-right: 8px;
+        box-shadow: 5px 5px #E45826;
     }
 
     .top-title {
         font-weight: 600;
         margin-bottom: 4px;
-        font-size: larger;
+        font-size: x-large;
         margin-left: 8px;
+        color: #F0A500;
+        //E45826
     }
 }
 
 .content {
+    background-color: #E6D5B8;
     .title {
         display: inline;
-        font-size: 24px;
+        font-size: x-large;
         font-weight: 600;
     }
 
@@ -47,22 +52,27 @@
     .doctor {
 
         &-cell {
-            border: 1px solid #f0f0f0;
-            padding: 8px;
+            border: 1px solid #1B1A17;
+            padding: 12px;
             margin-top: 4px;
-            background-color: #fafafa;;
+            background-color: #F0A500;
+            border-radius: 4px;
+            box-shadow: 5px 5px;
         }
     }
 
     .text {
-        font-size: 14px;
+        font-size: medium;
         margin-top: 8px;
+        color: #1B1A17;
         &-title {
             font-weight: 600;
+            color: #1B1A17;
+            font-size: large;
         }
         &-gender {
-            font-size: 12px;
-            color: #d3d3d3;
+            font-size: small;
+            color: #1B1A17;
             margin-top: 4px;
         }
     }
@@ -81,11 +91,13 @@
     .patient {
 
         &-cell {
-            border: 1px solid #f0f0f0;
-            padding: 8px;
+            border: 1px solid #1B1A17;
+            padding: 12px;
             margin-top: 4px;
-            background-color: #fafafa;
+            background-color: #F0A500;
             cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 5px 5px;
         }
     }
 }

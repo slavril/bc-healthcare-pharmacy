@@ -47,23 +47,23 @@ function Home() {
     }
 
     return (
-        <div>
+        <div className="body-all">
             <div className="top">
-                <div className="top-title">Pharmacy Website</div>
-                <button className='button' onClick={addNewDoctor} style={{ marginLeft: 8 }}>New doctor</button>
-                <button className='button' onClick={addNewPatient} style={{ marginLeft: 8 }}>New patient</button>
+                <div className="top-title font-gg">Pharmacy Website</div>
+                <button className='button font-gg' onClick={addNewDoctor} style={{ marginLeft: 8 }}>New doctor</button>
+                <button className='button font-gg' onClick={addNewPatient} style={{ marginLeft: 8 }}>New patient</button>
             </div>
             <div className="content">
                 <div className='doctor'>
                     <div className='sector'>
-                        <div className="title">Doctors</div>
+                        <div className="title font-gg">Doctors</div>
                     </div>
                     <div className='list'>
                         {doctors ? doctors.map(e => {
                             return (
                                 <div className='doctor-cell' key={e.username}>
-                                    <div className='text-title'>Doctor {e.name}</div>
-                                    <div className='text'>@{e.username}</div>
+                                    <div className='text-title font-gg'>Doctor {e.name}</div>
+                                    <div className='text font-gg'>@{e.username}</div>
                                 </div>
                             )
                         }) : 'no data'}
@@ -72,18 +72,18 @@ function Home() {
 
                 <div>
                     <div className='sector'>
-                        <div className="title">Patients</div>
+                        <div className="title font-gg">Patients</div>
                     </div>
                     <div className='list-patient'>
                         {patients ? patients.map(e => {
                             return (
                                 <Link to={'../edit-patient?id=' + e.ID} className='patient-cell' key={e.ID} onClick={() => { onPatientClick(e.ID) }}>
-                                    <div className='text-title'>{e.name}</div>
-                                    <div className='text-gender'>{e.ID}</div>
-                                    <div className='text'>{e.gender}</div>
-                                    <div className='text'>{e.DOB}</div>
-                                    <div className='text'>{e.address}</div>
-                                    <div className='text'>Doctor: {e.assignedDoctor}</div>
+                                    <div className='text-title font-gg'>{e.name}</div>
+                                    <div className='text-gender font-gg'>{e.ID}</div>
+                                    <div className='text font-gg'>{e.gender}</div>
+                                    <div className='text font-gg'>{e.DOB}</div>
+                                    <div className='text font-gg'>{e.address}</div>
+                                    <div className='text font-gg'>Doctor: {e.assignedDoctor}</div>
                                 </Link>
                             )
                         }) : 'no data'}
