@@ -50,7 +50,7 @@ function AddPatient({ route, navigation }) {
             newPatient.setPassword(password)
         }
         else {
-            newPatient = patient.password
+            newPatient.setPassword(patient.password)
         }
 
         return newPatient
