@@ -26,7 +26,7 @@ class ChangeDoctorPassword extends BaseSmartContract {
             if (block !== false) {
                 const transaction = TransactionModel.init(null, {
                     smcKey: 'ChangeDoctorPasswordSmartContract',
-                    doctor: param.doctor,
+                    doctor: doctor,
                     block: block
                 })
 
