@@ -6,6 +6,7 @@ import { socketService } from '../../services/Socket.service'
 import { chainService } from '../../services/Blockchain.service'
 import { patientService } from '../../services/Patient.service'
 import DoctorModel from '../../models/Doctor.model'
+import { encryptDR } from '../../utils/Encryptor'
 
 function AddPatient() {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ function AddPatient() {
             let doctor = new DoctorModel()
             doctor.name = name
             doctor.username = username
-            doctor.password = password
+            doctor.password = encryptDR(password)
       
             chainService.addBlockToChain(patientService.convertDoctorToBlock(doctor))
             socketService.sendSyncData()

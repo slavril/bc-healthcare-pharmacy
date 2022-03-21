@@ -1,5 +1,4 @@
 import { TimeUtil } from '../utils/Time.util'
-import { encrypt } from '../utils/Encryptor'
 
 export default class Doctor {
 
@@ -16,7 +15,7 @@ export default class Doctor {
         return {
             username: this.username,
             name: this.name,
-            password: encrypt(this.password, this.password)
+            password: this.password
         }
     }
 

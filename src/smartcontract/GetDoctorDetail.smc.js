@@ -3,7 +3,7 @@ import { chainService } from '../services/Blockchain.service'
 import TransactionModel from '../models/Transaction.model'
 import { socketService } from '../services/Socket.service'
 import PatientModel from '../models/patient.model'
-import { decrypt } from '../utils/Encryptor'
+import { decryptDR, encryptDR } from '../utils/Encryptor'
 import doctorModel from '../models/Doctor.model'
 
 
@@ -22,11 +22,8 @@ class DoctorDetail extends BaseSmartContract {
      * @param {String} password 
      */
     verifyDoctor = (block, username, password) => {
-        const purecode = decrypt(password, block.transaction.password)
-
-        if (purecode != password || block.transaction.username != username) return false
-
-        return true
+        const purecode = decryptDR(block.transaction.password)
+        return (purecode == password && block.transaction.username == username)
     }
 
     execute = (creatorKey, contractKey, param) => {
@@ -62,18 +59,27 @@ class DoctorDetail extends BaseSmartContract {
      * @returns {doctorModel}
      */
     getDetail = (ID, password) => {
-        const block = chainService.chains.find(e => e.index === ID)
-
+        let block = this.getDetailBlock(ID)
         if (block) {
-            const doctor = this.verifyDoctor(block, ID, password)
 
-            if (doctor !== false) {
+            if (block.direction) {
+                block = chainService.getShadowOf(block.direction)
+            }
+
+            const confirmed = this.verifyDoctor(block, ID, password)
+            if (confirmed == true) {
                 const object = doctorModel.initFromJson(block.transaction)
                 return object
             }
         }
 
+        console.log('Can not get doctor information, wrong password or userId');
         return undefined
+    }
+
+    getDetailBlock = (ID) => {
+        const block = chainService.chains.find(e => e.index === ID)
+        return block
     }
 
 }

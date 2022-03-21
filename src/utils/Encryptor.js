@@ -1,6 +1,10 @@
 /** Made it from https://github.com/BhavanPatel/react-native-simple-encryption */
 /** XOR cipher https://en.wikipedia.org/wiki/XOR_cipher */
 
+/**
+ * One key encrypt is not suggested, in secure, but I dont have much time to write another better
+ */
+
 import _ from 'lodash';
 const b64Table = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
@@ -76,6 +80,16 @@ export const encrypt = (key, data) => {
 export const decrypt = (key, data) => {
     data = b64Decode(data)
     return xorDecrypt(key, data);
+}
+
+export const encryptDR = (data) => {
+    data = xorEncrypt('094978593485', data)
+    return b64Encode(data);
+}
+
+export const decryptDR = (data) => {
+    data = b64Decode(data)
+    return xorDecrypt('094978593485', data);
 }
 
 export const key = 'VAF2348934JS'
