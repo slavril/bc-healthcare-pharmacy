@@ -68,13 +68,20 @@ export default class Patient {
     }
 
     isVerified = (password) => {
-        if (!password || !this.password) return false
-        return (decrypt(password, this.password) == password)
+        if (!password || !this.password) {
+            return false
+        }
+
+        if (decrypt(password, this.password) == 'verified') {
+            return true
+        }
+
+        return false
     }
 
     setPassword = (newValue) => {
         if (newValue)
-            this.password = encrypt(newValue, newValue)
+            this.password = encrypt(newValue, 'verified')
     }
 
 }

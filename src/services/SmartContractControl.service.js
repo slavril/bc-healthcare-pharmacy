@@ -7,6 +7,7 @@ import { getDoctorDetailSmartContract } from '../smartcontract/GetDoctorDetail.s
 import { getAllDoctorSmartContract } from '../smartcontract/GetAllDoctors.smc'
 import { loginSmartContract } from '../smartcontract/Login.smc'
 import { changeDoctorPasswordSmartContract } from '../smartcontract/ChangeDoctorPassword.smc'
+import { changePatientPasswordSmartContract } from '../smartcontract/ChangePatientPassword.smc'
 import BaseSMC from '../smartcontract/BaseSmartcontract.smc'
 
 class SmartContractService {
@@ -22,7 +23,8 @@ class SmartContractService {
         getDoctorDetailSmartContract,
         getAllDoctorSmartContract,
         loginSmartContract,
-        changeDoctorPasswordSmartContract
+        changeDoctorPasswordSmartContract,
+        changePatientPasswordSmartContract
     ]
 
     constructor() {
