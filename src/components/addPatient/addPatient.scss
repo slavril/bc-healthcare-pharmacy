@@ -1,5 +1,9 @@
 @use "../../scss/" as *;
 
+.btn-resetpass {
+    margin-left: 8px;
+}
+
 .add-patient {
     height: 1170px;
     &-container {

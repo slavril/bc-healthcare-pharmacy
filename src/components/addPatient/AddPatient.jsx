@@ -81,7 +81,7 @@ function AddPatient({ route, navigation }) {
             return (patient.name == name &&
                 patient.gender == gender &&
                 patient.address == address &&
-                patient.assignedDoctor == assignDoctor&&
+                patient.assignedDoctor == assignDoctor &&
                 patient.DOB == date && password.trim() == '')
         }
 
@@ -128,6 +128,18 @@ function AddPatient({ route, navigation }) {
     const buttonTitle = () => {
         if (searchParams.get('id')) return 'Edit patient'
         return 'Add patient'
+    }
+
+    const renderResetPassword = () => {
+        if (searchParams.get('id')) {
+            return (
+                <button className="btn-resetpass btn" onClick={() => {
+                    setPassword('123456')
+                    onModifyPatient()
+                }}>{'Reset password'}</button>
+            )
+        }
+        return null
     }
 
     return (
@@ -182,6 +194,15 @@ function AddPatient({ route, navigation }) {
                                 defaultValue={date}
                             />
 
+                            <p className='title'>Patient phone</p>
+                            <input
+                                type="text"
+                                onChange={(e) => { }}
+                                placeholder='Phone number'
+                                className="panel-right-input panel-right-address"
+                                defaultValue={''}
+                            />
+
                             <p className='title'>Patient address</p>
                             <input
                                 type="text"
@@ -208,14 +229,17 @@ function AddPatient({ route, navigation }) {
                                 }
                             </select>
 
-                            <p className='title'>Account password</p>
-                            <input type="text" onChange={(e) => { setPassword(e.target.value) }} placeholder='Password' className="panel-right-input panel-right-address" />
+                            {/* <p className='title'>Account password</p> */}
+                            {/* <input type="text" onChange={(e) => { setPassword(e.target.value) }} placeholder='Password' className="panel-right-input panel-right-address" /> */}
 
                             <div className="button-bar">
                                 <button className="btn-back btn" onClick={() => {
                                     navigate('/home')
                                 }}>Back</button>
                                 <button className="btn-add btn" onClick={onModifyPatient}>{buttonTitle()}</button>
+                                {
+                                    renderResetPassword()
+                                }
                             </div>
                         </div>
                     </div>
