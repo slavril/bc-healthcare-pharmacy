@@ -32,7 +32,9 @@ function AddPatient({ route, navigation }) {
     const [date, setDate] = useState(patient ? patient.DOB : '');
     const [address, setAddress] = useState(patient ? patient.address : '');
     const [assignDoctor, setDoctor] = useState(patient ? patient.assignedDoctor : 'select-doctor');
-    const [password, setPassword] = useState('');
+    //const [password, setPassword] = useState('');
+
+    let password = ''
 
     const editPatient = () => {
         let newPatient = new PatientModel()
@@ -82,7 +84,7 @@ function AddPatient({ route, navigation }) {
                 patient.gender == gender &&
                 patient.address == address &&
                 patient.assignedDoctor == assignDoctor &&
-                patient.DOB == date && password.trim() == '')
+                patient.DOB == date)
         }
 
         return false
@@ -130,13 +132,15 @@ function AddPatient({ route, navigation }) {
         return 'Add patient'
     }
 
+    const resetpassword = () => {
+        password = '123456'
+        onModifyPatient()
+    }
+
     const renderResetPassword = () => {
         if (searchParams.get('id')) {
             return (
-                <button className="btn-resetpass btn" onClick={() => {
-                    setPassword('123456')
-                    onModifyPatient()
-                }}>{'Reset password'}</button>
+                <button className="btn-resetpass btn" onClick={resetpassword}>{'Reset password'}</button>
             )
         }
         return null
