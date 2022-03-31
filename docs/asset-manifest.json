@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/HCPharmacy/static/css/main.91c96608.css",
-    "main.js": "/HCPharmacy/static/js/main.faa10a87.js",
+    "main.js": "/HCPharmacy/static/js/main.39686ba3.js",
     "static/js/787.a7debb48.chunk.js": "/HCPharmacy/static/js/787.a7debb48.chunk.js",
     "static/media/doctor_1.jpg": "/HCPharmacy/static/media/doctor_1.b8826079845888665687.jpg",
     "static/media/walking.gif": "/HCPharmacy/static/media/walking.1ccccd65d00f8c0cd874.gif",
@@ -9,11 +9,11 @@
     "static/media/icon_doctor.png": "/HCPharmacy/static/media/icon_doctor.fbd3bd5eb156af59ccf1.png",
     "index.html": "/HCPharmacy/index.html",
     "main.91c96608.css.map": "/HCPharmacy/static/css/main.91c96608.css.map",
-    "main.faa10a87.js.map": "/HCPharmacy/static/js/main.faa10a87.js.map",
+    "main.39686ba3.js.map": "/HCPharmacy/static/js/main.39686ba3.js.map",
     "787.a7debb48.chunk.js.map": "/HCPharmacy/static/js/787.a7debb48.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.91c96608.css",
-    "static/js/main.faa10a87.js"
+    "static/js/main.39686ba3.js"
   ]
 }
