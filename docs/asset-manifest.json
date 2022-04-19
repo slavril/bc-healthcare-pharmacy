@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/bc-healthcare-pharmacy/static/css/main.2c2f1529.css",
-    "main.js": "/bc-healthcare-pharmacy/static/js/main.275869c0.js",
+    "main.css": "/bc-healthcare-pharmacy/static/css/main.a59acf28.css",
+    "main.js": "/bc-healthcare-pharmacy/static/js/main.a097f654.js",
     "static/js/787.a7debb48.chunk.js": "/bc-healthcare-pharmacy/static/js/787.a7debb48.chunk.js",
     "static/media/doctor_1.jpg": "/bc-healthcare-pharmacy/static/media/doctor_1.b8826079845888665687.jpg",
     "static/media/walking.gif": "/bc-healthcare-pharmacy/static/media/walking.1ccccd65d00f8c0cd874.gif",
     "static/media/icon_patient.png": "/bc-healthcare-pharmacy/static/media/icon_patient.d5cd3c65963620d9cc41.png",
     "static/media/icon_doctor.png": "/bc-healthcare-pharmacy/static/media/icon_doctor.fbd3bd5eb156af59ccf1.png",
     "index.html": "/bc-healthcare-pharmacy/index.html",
-    "main.2c2f1529.css.map": "/bc-healthcare-pharmacy/static/css/main.2c2f1529.css.map",
-    "main.275869c0.js.map": "/bc-healthcare-pharmacy/static/js/main.275869c0.js.map",
+    "main.a59acf28.css.map": "/bc-healthcare-pharmacy/static/css/main.a59acf28.css.map",
+    "main.a097f654.js.map": "/bc-healthcare-pharmacy/static/js/main.a097f654.js.map",
     "787.a7debb48.chunk.js.map": "/bc-healthcare-pharmacy/static/js/787.a7debb48.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2c2f1529.css",
-    "static/js/main.275869c0.js"
+    "static/css/main.a59acf28.css",
+    "static/js/main.a097f654.js"
   ]
 }
